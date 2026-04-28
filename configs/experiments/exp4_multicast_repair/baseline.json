@@ -1,0 +1,51 @@
+{
+  "scenario_name": "exp4_multicast_repair_baseline",
+  "output_directory": "../../../results/exp4_multicast_repair/baseline",
+  "contact_plan_file": "contact_plan.ion",
+  "enhancements": {
+    "one_route_per_neighbor": true,
+    "queue_delay": true,
+    "anti_loop_proactive": true
+  },
+  "simulation": {
+    "start_time": 0.0,
+    "end_time": 70.0,
+    "owlt_margin": 0.5,
+    "recompute_budget": 4,
+    "failure_seed": 404,
+    "phase1": {
+      "k_paths": 6
+    }
+  },
+  "multicast_groups": [
+    {
+      "group_id": "ops_broadcast",
+      "source_node": 1,
+      "member_nodes": [4, 5]
+    }
+  ],
+  "traffic": [
+    {
+      "mode": "SINGLE",
+      "source_node": 1,
+      "multicast_group_id": "ops_broadcast",
+      "is_multicast": true,
+      "start_time": 2.0,
+      "bundle_count": 1,
+      "payload_size": 64.0,
+      "header_size": 16.0,
+      "priority": "NORMAL",
+      "ttl": 80.0,
+      "is_critical": false,
+      "allow_fragmentation": false
+    }
+  ],
+  "failure_injection": [
+    {
+      "mode": "PLAN_REPLACEMENT",
+      "trigger_time": 5.0,
+      "replacement_plan_file": "replacement_plan.ion",
+      "label": "repair_after_backbone_loss"
+    }
+  ]
+}

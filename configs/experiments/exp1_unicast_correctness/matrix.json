@@ -1,0 +1,20 @@
+{
+  "experiment_name": "exp1_unicast_correctness",
+  "scenario_files": [
+    "baseline.json"
+  ],
+  "dimensions": [
+    {
+      "name": "traffic[0].payload_size",
+      "values": [64, 256, 1024]
+    },
+    {
+      "name": "traffic[1].bundle_count",
+      "values": [4, 16, 64]
+    },
+    {
+      "name": "simulation.phase1.k_paths",
+      "values": [2, 4, 8]
+    }
+  ]
+}

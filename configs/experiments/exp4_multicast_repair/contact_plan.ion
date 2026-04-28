@@ -1,0 +1,11 @@
+# Multicast repair topology with one healthy branch and one branch that must be repaired
+a contact +0 +10 1 2 500
+a contact +11 +20 2 4 500
+a contact +11 +20 2 5 500
+a contact +21 +30 2 6 500
+a contact +31 +40 6 5 500
+a range +0 +70 1 2 1.0
+a range +0 +70 2 4 1.0
+a range +0 +70 2 5 1.0
+a range +0 +70 2 6 1.0
+a range +0 +70 6 5 1.0

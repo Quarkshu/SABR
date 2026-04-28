@@ -1,0 +1,13 @@
+# Five-node unicast correctness topology
+a contact +0 +18 1 2 140
+a contact +6 +30 2 5 120
+a contact +0 +16 1 3 130
+a contact +18 +36 3 5 130
+a contact +10 +26 2 4 100
+a contact +26 +44 4 5 100
+a range +0 +60 1 2 1.0
+a range +0 +60 2 5 1.2
+a range +0 +60 1 3 1.0
+a range +0 +60 3 5 1.3
+a range +0 +60 2 4 0.8
+a range +0 +60 4 5 0.9

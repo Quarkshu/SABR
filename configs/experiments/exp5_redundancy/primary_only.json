@@ -1,0 +1,43 @@
+{
+  "scenario_name": "exp5_redundancy_primary_only",
+  "output_directory": "../../../results/exp5_redundancy/primary_only",
+  "contact_plan_file": "contact_plan.ion",
+  "simulation": {
+    "start_time": 0.0,
+    "end_time": 80.0,
+    "owlt_margin": 0.5,
+    "recompute_budget": 4,
+    "failure_seed": 505,
+    "phase1": {
+      "k_paths": 6
+    }
+  },
+  "traffic": [
+    {
+      "mode": "PERIODIC",
+      "source_node": 1,
+      "destination_node": 6,
+      "start_time": 1.0,
+      "period": 5.0,
+      "bundle_count": 6,
+      "payload_size": 256.0,
+      "header_size": 24.0,
+      "priority": "NORMAL",
+      "ttl": 80.0
+    }
+  ],
+  "failures": [
+    {
+      "mode": "PROBABILISTIC_CONTACTS",
+      "trigger_time": 0.0,
+      "probability": 0.15,
+      "contact_ids": [3, 4, 5, 6],
+      "label": "background_failures"
+    }
+  ],
+  "redundancy": {
+    "mode": "NONE",
+    "enable_for_unicast": false,
+    "enable_for_multicast_trunk": false
+  }
+}

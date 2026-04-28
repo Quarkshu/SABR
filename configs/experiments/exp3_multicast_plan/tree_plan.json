@@ -1,0 +1,41 @@
+{
+  "scenario_name": "exp3_multicast_plan_tree",
+  "output_directory": "../../../results/exp3_multicast_plan/tree_plan",
+  "contact_plan_file": "contact_plan.ion",
+  "enhancements": {
+    "one_route_per_neighbor": true,
+    "queue_delay": true,
+    "anti_loop_proactive": true
+  },
+  "simulation": {
+    "start_time": 0.0,
+    "end_time": 70.0,
+    "owlt_margin": 0.5,
+    "recompute_budget": 4,
+    "failure_seed": 303,
+    "phase1": {
+      "k_paths": 6
+    }
+  },
+  "multicast_groups": [
+    {
+      "group_id": "science_team",
+      "source_node": 1,
+      "member_nodes": [4, 5, 6]
+    }
+  ],
+  "traffic": [
+    {
+      "mode": "BATCH",
+      "source_node": 1,
+      "multicast_group_id": "science_team",
+      "is_multicast": true,
+      "start_time": 2.0,
+      "bundle_count": 4,
+      "payload_size": 256.0,
+      "header_size": 32.0,
+      "priority": "NORMAL",
+      "ttl": 80.0
+    }
+  ]
+}

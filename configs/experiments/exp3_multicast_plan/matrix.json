@@ -1,0 +1,21 @@
+{
+  "experiment_name": "exp3_multicast_plan",
+  "scenario_files": [
+    "tree_plan.json",
+    "split_unicast_control.json"
+  ],
+  "dimensions": [
+    {
+      "name": "traffic[0].bundle_count",
+      "values": [1, 4, 16]
+    },
+    {
+      "name": "multicast.group_size",
+      "values": [2, 3]
+    },
+    {
+      "name": "traffic[0].payload_size",
+      "values": [128, 512]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "experiment_name": "exp5_redundancy",
+  "scenario_files": [
+    "primary_only.json",
+    "single_backup.json"
+  ],
+  "dimensions": [
+    {
+      "name": "failures[0].probability",
+      "values": [0.0, 0.1, 0.2, 0.3]
+    },
+    {
+      "name": "redundancy.mode",
+      "values": ["NONE", "SINGLE_BACKUP", "MULTI_BACKUP"]
+    },
+    {
+      "name": "redundancy.max_extra_copies",
+      "values": [1, 2]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "scenario_name": "exp5_redundancy_single_backup",
+  "output_directory": "../../../results/exp5_redundancy/single_backup",
+  "contact_plan_file": "contact_plan.ion",
+  "simulation": {
+    "start_time": 0.0,
+    "end_time": 80.0,
+    "owlt_margin": 0.5,
+    "recompute_budget": 4,
+    "failure_seed": 505,
+    "phase1": {
+      "k_paths": 6
+    }
+  },
+  "traffic": [
+    {
+      "mode": "PERIODIC",
+      "source_node": 1,
+      "destination_node": 6,
+      "start_time": 1.0,
+      "period": 5.0,
+      "bundle_count": 6,
+      "payload_size": 256.0,
+      "header_size": 24.0,
+      "priority": "NORMAL",
+      "ttl": 80.0
+    }
+  ],
+  "failures": [
+    {
+      "mode": "PROBABILISTIC_CONTACTS",
+      "trigger_time": 0.0,
+      "probability": 0.15,
+      "contact_ids": [3, 4, 5, 6],
+      "label": "background_failures"
+    }
+  ],
+  "redundancy": {
+    "mode": "SINGLE_BACKUP",
+    "max_extra_copies": 1,
+    "risk_threshold": 0.55,
+    "min_diversity_score": 0.5,
+    "min_capacity_reserve_ratio": 0.2,
+    "min_ttl_slack": 6.0,
+    "enable_for_unicast": true,
+    "enable_for_multicast_trunk": false
+  }
+}

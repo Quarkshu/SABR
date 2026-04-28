@@ -1,0 +1,32 @@
+{
+  "experiment_name": "exp6_ablation",
+  "scenario_files": [
+    "baseline.json"
+  ],
+  "dimensions": [
+    {
+      "name": "enhancements.one_route_per_neighbor",
+      "values": [true, false]
+    },
+    {
+      "name": "enhancements.queue_delay",
+      "values": [true, false]
+    },
+    {
+      "name": "enhancements.anti_loop_reactive",
+      "values": [true, false]
+    },
+    {
+      "name": "enhancements.anti_loop_proactive",
+      "values": [true, false]
+    },
+    {
+      "name": "redundancy.mode",
+      "values": ["NONE", "SINGLE_BACKUP"]
+    },
+    {
+      "name": "simulation.phase1.k_paths",
+      "values": [2, 4, 6]
+    }
+  ]
+}

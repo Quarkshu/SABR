@@ -1,0 +1,33 @@
+{
+  "scenario_name": "stage5_ref2_reference_baseline",
+  "output_directory": "../../../results/exp1_unicast_correctness/stage5_reference_baseline",
+  "contact_plan_file": "contact_plan.ion",
+  "enhancements": {
+    "one_route_per_neighbor": false,
+    "queue_delay": false,
+    "anti_loop_proactive": false
+  },
+  "simulation": {
+    "start_time": 0.0,
+    "end_time": 120.0,
+    "owlt_margin": 0.0,
+    "recompute_budget": 3,
+    "failure_seed": 501,
+    "phase1": {
+      "k_paths": 4
+    }
+  },
+  "traffic": [
+    {
+      "mode": "BATCH",
+      "source_node": 1,
+      "destination_node": 5,
+      "start_time": 0.0,
+      "bundle_count": 5,
+      "payload_size": 32.0,
+      "header_size": 16.0,
+      "priority": "NORMAL",
+      "ttl": 80.0
+    }
+  ]
+}

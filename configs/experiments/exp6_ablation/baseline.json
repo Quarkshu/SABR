@@ -1,0 +1,65 @@
+{
+  "scenario_name": "exp6_ablation_full_stack",
+  "output_directory": "../../../results/exp6_ablation/baseline",
+  "contact_plan_file": "contact_plan.ion",
+  "enhancements": {
+    "one_route_per_neighbor": true,
+    "queue_delay": true,
+    "anti_loop_reactive": true,
+    "anti_loop_proactive": true
+  },
+  "simulation": {
+    "start_time": 0.0,
+    "end_time": 90.0,
+    "owlt_margin": 0.5,
+    "recompute_budget": 5,
+    "failure_seed": 606,
+    "phase1": {
+      "k_paths": 6
+    }
+  },
+  "traffic": [
+    {
+      "mode": "PERIODIC",
+      "source_node": 1,
+      "destination_node": 5,
+      "start_time": 1.0,
+      "period": 3.0,
+      "bundle_count": 10,
+      "payload_size": 192.0,
+      "header_size": 24.0,
+      "priority": "NORMAL",
+      "ttl": 90.0
+    },
+    {
+      "mode": "BATCH",
+      "source_node": 1,
+      "destination_node": 5,
+      "start_time": 20.0,
+      "bundle_count": 4,
+      "payload_size": 128.0,
+      "header_size": 24.0,
+      "priority": "EXPEDITED",
+      "ttl": 90.0,
+      "is_critical": true
+    }
+  ],
+  "failures": [
+    {
+      "mode": "CONTACT_SET",
+      "trigger_time": 30.0,
+      "contact_ids": [5],
+      "label": "remove_midpath"
+    }
+  ],
+  "redundancy": {
+    "mode": "SINGLE_BACKUP",
+    "max_extra_copies": 1,
+    "risk_threshold": 0.6,
+    "min_diversity_score": 0.45,
+    "min_capacity_reserve_ratio": 0.15,
+    "min_ttl_slack": 4.0,
+    "enable_for_unicast": true,
+    "enable_for_multicast_trunk": false
+  }
+}

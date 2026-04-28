@@ -1,0 +1,24 @@
+{
+  "experiment_name": "exp2_unicast_scale",
+  "scenario_files": [
+    "baseline.json"
+  ],
+  "dimensions": [
+    {
+      "name": "traffic[0].bundle_count",
+      "values": [20, 100, 500]
+    },
+    {
+      "name": "traffic[0].payload_size",
+      "values": [256, 1024, 4096]
+    },
+    {
+      "name": "simulation.phase1.k_paths",
+      "values": [4, 8, 16]
+    },
+    {
+      "name": "simulation.owlt_margin",
+      "values": [0.3, 0.6, 1.0]
+    }
+  ]
+}
