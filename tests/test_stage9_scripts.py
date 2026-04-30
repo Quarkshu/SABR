@@ -60,6 +60,9 @@ class Stage9SuitePlanTest(unittest.TestCase):
         self.assertIn("docs", destinations)
         self.assertIn("configs/experiments", destinations)
         self.assertIn("scripts/benchmark_nf_pf_01.py", destinations)
+        self.assertIn("scripts/complete_experiment_workflow.py", destinations)
+        self.assertIn("scripts/run_exp1_complete.py", destinations)
+        self.assertIn("scripts/run_exp6_complete.py", destinations)
         self.assertIn("scripts/stage9_suite.py", destinations)
         self.assertIn("samples/performance", destinations)
 

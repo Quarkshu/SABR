@@ -98,3 +98,7 @@ add_test(
     NAME sabr_python_stage9_tests
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_stage9_scripts.py
 )
+add_test(
+    NAME sabr_python_complete_experiment_tests
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_complete_experiment_scripts.py
+)

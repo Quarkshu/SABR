@@ -9,6 +9,7 @@
 - 结果导出：`export`
 - 图表生成：`plot`
 - 批量 smoke / full 运行：`scripts/run_experiments.py`
+- 单实验完整执行脚本：`scripts/run_exp1_complete.py` ~ `scripts/run_exp6_complete.py`
 - NF-PF-01 性能基准：`scripts/benchmark_nf_pf_01.py`
 - 阶段 9 正式执行套件：`scripts/stage9_suite.py`
 
@@ -194,6 +195,30 @@ d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_experiments.py -
 
 本仓库当前包含六类实验，每类实验都位于 `configs/experiments/` 下的独立目录中。
 
+每个实验现在都提供一个独立的“完整执行脚本”，位于 `scripts/` 下：
+
+- `scripts/run_exp1_complete.py`
+- `scripts/run_exp2_complete.py`
+- `scripts/run_exp3_complete.py`
+- `scripts/run_exp4_complete.py`
+- `scripts/run_exp5_complete.py`
+- `scripts/run_exp6_complete.py`
+
+这些脚本默认行为如下：
+
+- 在仓库根目录下执行
+- 自动创建带时间戳的独立输出目录
+- 对包含 `matrix.json` 的实验默认执行完整矩阵，不加 `--limit`
+- 自动串联原始 run、聚合导出和 SVG 图表生成
+- 额外写出 `execution_plan.json` 和 `execution_report.json`
+
+这些脚本都支持同一组可选参数：
+
+- `--output-root`：指定输出目录；不传时使用 `results/expN_complete_<timestamp>/`
+- `--workspace-root`：显式指定工作区根目录
+- `--sabr`：显式指定 `sabr.exe` 路径
+- `--dry-run`：只生成 `execution_plan.json`，不真正执行实验
+
 ### 5.1 总览表
 
 | 实验 | 目录 | 目标 | 推荐入口 |
@@ -225,6 +250,18 @@ d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_experiments.py -
 
 ```powershell
 .\build\sabr.exe run-scenario --config .\configs\experiments\exp1_unicast_correctness\baseline.json --output .\results\exp1_smoke
+```
+
+完整执行脚本：
+
+```powershell
+d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_exp1_complete.py
+```
+
+如果需要指定固定输出目录：
+
+```powershell
+d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_exp1_complete.py --output-root .\results\exp1_complete
 ```
 
 **重点观察项**
@@ -266,6 +303,12 @@ d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_experiments.py -
 .\build\sabr.exe run-experiment --matrix .\configs\experiments\exp2_unicast_scale\matrix.json --output .\results\exp2_smoke --limit 9
 ```
 
+完整执行脚本：
+
+```powershell
+d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_exp2_complete.py
+```
+
 **重点观察项**
 
 - `summary::delivery_rate`
@@ -296,6 +339,12 @@ d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_experiments.py -
 ```powershell
 .\build\sabr.exe run-scenario --config .\configs\experiments\exp3_multicast_plan\tree_plan.json --output .\results\exp3_tree
 .\build\sabr.exe run-scenario --config .\configs\experiments\exp3_multicast_plan\split_unicast_control.json --output .\results\exp3_split
+```
+
+完整执行脚本：
+
+```powershell
+d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_exp3_complete.py
 ```
 
 **重点观察项**
@@ -333,6 +382,12 @@ d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_experiments.py -
 .\build\sabr.exe run-scenario --config .\configs\experiments\exp4_multicast_repair\baseline.json --output .\results\exp4_smoke
 ```
 
+完整执行脚本：
+
+```powershell
+d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_exp4_complete.py
+```
+
 **重点观察项**
 
 - `summary::local_repair_count`
@@ -364,6 +419,12 @@ d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_experiments.py -
 
 ```powershell
 .\build\sabr.exe run-scenario --config .\configs\experiments\exp5_redundancy\single_backup.json --output .\results\exp5_smoke
+```
+
+完整执行脚本：
+
+```powershell
+d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_exp5_complete.py
 ```
 
 **重点观察项**
@@ -403,6 +464,12 @@ d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_experiments.py -
 
 ```powershell
 .\build\sabr.exe run-experiment --matrix .\configs\experiments\exp6_ablation\matrix.json --output .\results\exp6_smoke --limit 9
+```
+
+完整执行脚本：
+
+```powershell
+d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_exp6_complete.py
 ```
 
 **重点观察项**
