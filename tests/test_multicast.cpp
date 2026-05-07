@@ -724,7 +724,7 @@ TEST(MulticastExperimentConfigTest, Exp3MatrixDimensionsMatchPlanExperiment) {
               (exp3_dir() / "split_unicast_control.json").lexically_normal());
     ASSERT_EQ(matrix.dimensions.size(), 3u);
 
-    const ExperimentDimension* bundle_count = find_dimension(matrix, "traffic[0].bundle_count");
+    const ExperimentDimension* bundle_count = find_dimension(matrix, "traffic[*].bundle_count");
     ASSERT_NE(bundle_count, nullptr);
     ASSERT_EQ(bundle_count->values.size(), 3u);
     EXPECT_EQ(std::get<std::int64_t>(bundle_count->values[0]), 1);
@@ -736,7 +736,7 @@ TEST(MulticastExperimentConfigTest, Exp3MatrixDimensionsMatchPlanExperiment) {
     EXPECT_EQ(std::get<std::int64_t>(group_size->values[0]), 2);
     EXPECT_EQ(std::get<std::int64_t>(group_size->values[1]), 3);
 
-    const ExperimentDimension* payload_size = find_dimension(matrix, "traffic[0].payload_size");
+    const ExperimentDimension* payload_size = find_dimension(matrix, "traffic[*].payload_size");
     ASSERT_NE(payload_size, nullptr);
     ASSERT_EQ(payload_size->values.size(), 2u);
     EXPECT_EQ(std::get<std::int64_t>(payload_size->values[0]), 128);

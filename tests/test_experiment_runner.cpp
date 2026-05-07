@@ -70,6 +70,28 @@ TEST(ExperimentRunnerTest, Exp3SyntheticGroupSizeAdjustsScenarioDocumentBeforePa
     EXPECT_EQ(run.scenario.scenario_name, "exp3_multicast_plan_tree__matrix_0001");
 }
 
+TEST(ExperimentRunnerTest, Exp3SplitControlWildcardTrafficOverridesApplyToRetainedFlows) {
+    const std::filesystem::path scenario_path = exp3_dir() / "split_unicast_control.json";
+
+    const ExpandedExperimentRun run = ExperimentRunner::build_run(
+        scenario_path,
+        {
+            {"traffic[*].bundle_count", static_cast<std::int64_t>(1)},
+            {"multicast.group_size", static_cast<std::int64_t>(2)},
+            {"traffic[*].payload_size", static_cast<std::int64_t>(128)},
+        },
+        "exp3_multicast_plan",
+        1);
+
+    ASSERT_EQ(run.scenario.traffic_patterns.size(), 2u);
+    EXPECT_EQ(run.scenario.traffic_patterns[0].destination_node, 4);
+    EXPECT_EQ(run.scenario.traffic_patterns[1].destination_node, 5);
+    EXPECT_EQ(run.scenario.traffic_patterns[0].bundle_count, 1u);
+    EXPECT_EQ(run.scenario.traffic_patterns[1].bundle_count, 1u);
+    EXPECT_DOUBLE_EQ(run.scenario.traffic_patterns[0].payload_size, 128.0);
+    EXPECT_DOUBLE_EQ(run.scenario.traffic_patterns[1].payload_size, 128.0);
+}
+
 TEST(ExperimentRunnerTest, RunScenarioWritesArtifactsAndManifest) {
     clear_temp_output_root();
     const std::filesystem::path scenario_path = exp1_dir() / "baseline.json";

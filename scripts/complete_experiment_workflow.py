@@ -266,10 +266,10 @@ def build_execution_plan(workspace_root: Path,
             scenario_step(executable, "split_unicast_control", experiment_dir / "split_unicast_control.json", scenarios_root / "split_unicast_control"),
             matrix_step(executable, "matrix", experiment_dir / "matrix.json", matrix_root),
             export_step(executable, "export_scenarios", scenarios_root, exports_root / "scenarios", "summary::delivery_rate", "scenario_name"),
-            export_step(executable, "export_matrix", matrix_root, exports_root / "matrix", "summary::delivery_rate", "coord::traffic[0].bundle_count", "coord::multicast.group_size"),
+            export_step(executable, "export_matrix", matrix_root, exports_root / "matrix", "summary::delivery_rate", "coord::traffic[*].bundle_count", "coord::multicast.group_size"),
             plot_step(executable, "topology", "topology", experiment_dir / "tree_plan.json", plots_root / "exp3_topology.svg", title="Exp3 Multicast Topology"),
             plot_step(executable, "scenarios_comparison", "comparison", exports_root / "scenarios" / "aggregated_summary.csv", plots_root / "exp3_scenarios_comparison.svg", metric="summary::delivery_rate", x_key="scenario_name", title="Exp3 Scenario Delivery Comparison"),
-            plot_step(executable, "matrix_comparison", "comparison", exports_root / "matrix" / "aggregated_summary.csv", plots_root / "exp3_matrix_comparison.svg", metric="summary::delivery_rate", x_key="coord::traffic[0].bundle_count", series_key="scenario_name", title="Exp3 Matrix Delivery Comparison"),
+            plot_step(executable, "matrix_comparison", "comparison", exports_root / "matrix" / "aggregated_summary.csv", plots_root / "exp3_matrix_comparison.svg", metric="summary::delivery_rate", x_key="coord::traffic[*].bundle_count", series_key="scenario_name", title="Exp3 Matrix Delivery Comparison"),
         ]
     elif experiment_name == "exp4_multicast_repair":
         baseline_root = output_root / "baseline"

@@ -17,6 +17,7 @@ using json = nlohmann::json;
 struct PathToken {
     std::string key;
     bool has_index = false;
+    bool wildcard_index = false;
     std::size_t index = 0;
 };
 
@@ -83,7 +84,12 @@ std::vector<PathToken> parse_path_tokens(const std::string& path) {
                 throw std::runtime_error("unterminated path index: " + path);
             }
             token.has_index = true;
-            token.index = static_cast<std::size_t>(std::stoull(path.substr(cursor + 1, close - cursor - 1)));
+            const std::string index_text = path.substr(cursor + 1, close - cursor - 1);
+            if (index_text == "*") {
+                token.wildcard_index = true;
+            } else {
+                token.index = static_cast<std::size_t>(std::stoull(index_text));
+            }
             cursor = close + 1;
         }
 
@@ -100,11 +106,11 @@ std::vector<PathToken> parse_path_tokens(const std::string& path) {
     return tokens;
 }
 
-json* traverse_token(json* cursor,
-                     const PathToken& token,
-                     const std::string& full_path,
-                     bool allow_missing_last,
-                     bool is_last) {
+json* ensure_member(json* cursor,
+                    const PathToken& token,
+                    const std::string& full_path,
+                    bool allow_missing_last,
+                    bool is_last) {
     if (!cursor->is_object()) {
         throw std::runtime_error("expected object while applying path: " + full_path);
     }
@@ -118,33 +124,63 @@ json* traverse_token(json* cursor,
         }
     }
 
-    json* next = &(*member);
+    return &(*member);
+}
+
+void assign_json_path_recursive(json* cursor,
+                                const std::vector<PathToken>& tokens,
+                                std::size_t token_index,
+                                const ExperimentValue& value,
+                                const std::string& full_path) {
+    const PathToken& token = tokens[token_index];
+    const bool is_last = token_index + 1 == tokens.size();
+    json* next = ensure_member(cursor, token, full_path, true, is_last);
+
     if (!token.has_index) {
-        return next;
+        if (is_last) {
+            *next = experiment_value_to_json(value);
+            return;
+        }
+        assign_json_path_recursive(next, tokens, token_index + 1, value, full_path);
+        return;
     }
+
     if (!next->is_array()) {
         throw std::runtime_error("expected array at '" + token.key + "' while applying path: " + full_path);
     }
+
+    if (token.wildcard_index) {
+        if (next->empty()) {
+            throw std::runtime_error("array is empty while applying path: " + full_path);
+        }
+        for (json& item : *next) {
+            if (is_last) {
+                item = experiment_value_to_json(value);
+            } else {
+                assign_json_path_recursive(&item, tokens, token_index + 1, value, full_path);
+            }
+        }
+        return;
+    }
+
     if (token.index >= next->size()) {
         throw std::runtime_error("array index out of range while applying path: " + full_path);
     }
-    return &next->at(token.index);
+
+    json* indexed = &next->at(token.index);
+    if (is_last) {
+        *indexed = experiment_value_to_json(value);
+        return;
+    }
+
+    assign_json_path_recursive(indexed, tokens, token_index + 1, value, full_path);
 }
 
 void assign_json_path(json& document,
                       const std::vector<PathToken>& tokens,
                       const ExperimentValue& value,
                       const std::string& full_path) {
-    json* cursor = &document;
-    for (std::size_t index = 0; index < tokens.size(); ++index) {
-        const bool is_last = index + 1 == tokens.size();
-        json* next = traverse_token(cursor, tokens[index], full_path, true, is_last);
-        if (is_last) {
-            *next = experiment_value_to_json(value);
-            return;
-        }
-        cursor = next;
-    }
+    assign_json_path_recursive(&document, tokens, 0, value, full_path);
 }
 
 void apply_multicast_group_size(json& document,

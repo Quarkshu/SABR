@@ -81,6 +81,22 @@ class CompleteExperimentWorkflowTest(unittest.TestCase):
         self.assertIn("coord::failures[0].probability", export_matrix_step["command"])
         self.assertIn("coord::redundancy.mode", export_matrix_step["command"])
 
+    def test_exp3_plan_uses_wildcard_matrix_coordinates(self) -> None:
+        plan = workflow.build_execution_plan(
+            REPO_ROOT,
+            REPO_ROOT / "build" / "sabr.exe",
+            "exp3_multicast_plan",
+            REPO_ROOT / "results" / "exp3_complete_test_plan",
+        )
+
+        export_matrix_step = next(step for step in plan["steps"] if step["name"] == "export_matrix")
+        matrix_plot_step = next(step for step in plan["steps"] if step["name"] == "matrix_comparison")
+
+        self.assertIn("coord::traffic[*].bundle_count", export_matrix_step["command"])
+        self.assertNotIn("coord::traffic[0].bundle_count", export_matrix_step["command"])
+        self.assertIn("coord::traffic[*].bundle_count", matrix_plot_step["command"])
+        self.assertNotIn("coord::traffic[0].bundle_count", matrix_plot_step["command"])
+
     def test_wrapper_scripts_map_to_unique_experiments(self) -> None:
         self.assertEqual(
             [

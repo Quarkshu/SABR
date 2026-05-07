@@ -190,7 +190,7 @@ TEST(ExperimentConfigTest, Exp3MatrixDimensionsMatchMulticastPlanExperiment) {
     ASSERT_EQ(matrix.scenario_files.size(), 2u);
     ASSERT_EQ(matrix.dimensions.size(), 3u);
 
-    const ExperimentDimension* bundle_count = find_dimension(matrix, "traffic[0].bundle_count");
+    const ExperimentDimension* bundle_count = find_dimension(matrix, "traffic[*].bundle_count");
     ASSERT_NE(bundle_count, nullptr);
     ASSERT_EQ(bundle_count->values.size(), 3u);
     EXPECT_EQ(std::get<std::int64_t>(bundle_count->values[0]), 1);

@@ -6,7 +6,7 @@
   ],
   "dimensions": [
     {
-      "name": "traffic[0].bundle_count",
+      "name": "traffic[*].bundle_count",
       "values": [1, 4, 16]
     },
     {
@@ -14,7 +14,7 @@
       "values": [2, 3]
     },
     {
-      "name": "traffic[0].payload_size",
+      "name": "traffic[*].payload_size",
       "values": [128, 512]
     }
   ]
