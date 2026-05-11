@@ -146,5 +146,6 @@ Sample outputs generated in this workspace:
 
 - [docs/experiments.md](docs/experiments.md) — experiment catalog, commands, output conventions, and chart workflow
 - [docs/experiments_zh.md](docs/experiments_zh.md) — 中文实验手册，覆盖环境、命令、实验一到实验六、阶段 9 验收与交付流程
+- [docs/configuration_zh.md](docs/configuration_zh.md) — 中文配置手册，覆盖 scenario、simulation、traffic、failures、redundancy、multicast_groups 与 matrix.json 写法
 - [docs/metrics.md](docs/metrics.md) — summary field and CSV column reference
 - [docs/reproducibility.md](docs/reproducibility.md) — Stage 9 benchmark, representative suite, and standard release bundle workflow

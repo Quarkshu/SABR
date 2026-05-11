@@ -3,18 +3,18 @@
   "output_directory": "../../../results/exp2_unicast_scale/baseline",
   "contact_plan_file": "contact_plan.ion",
   "enhancements": {
-    "one_route_per_neighbor": true,
+    "one_route_per_neighbor": false,
     "queue_delay": true,
     "anti_loop_proactive": true
   },
   "simulation": {
     "start_time": 0.0,
-    "end_time": 100.0,
+    "end_time": 180.0,
     "owlt_margin": 0.6,
     "recompute_budget": 6,
     "failure_seed": 202,
     "phase1": {
-      "k_paths": 8
+      "k_paths": 3
     }
   },
   "traffic": [
@@ -23,7 +23,7 @@
       "source_node": 1,
       "destination_node": 8,
       "start_time": 2.0,
-      "period": 1.0,
+      "period": 0.09,
       "bundle_count": 20,
       "payload_size": 256.0,
       "header_size": 24.0,

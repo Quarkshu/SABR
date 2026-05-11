@@ -44,16 +44,16 @@ TEST(ExperimentRunnerTest, Exp2MatrixExpansionAppliesOverridesAndAssignsRunDirec
     EXPECT_EQ(runs.front().manifest.coordinates.size(), 4u);
     EXPECT_EQ(runs.front().scenario.traffic_patterns[0].bundle_count, 20u);
     EXPECT_DOUBLE_EQ(runs.front().scenario.traffic_patterns[0].payload_size, 256.0);
-    EXPECT_EQ(runs.front().scenario.engine.phase1_config.k_paths, 4);
-    EXPECT_DOUBLE_EQ(runs.front().scenario.engine.owlt_margin, 0.3);
+    EXPECT_EQ(runs.front().scenario.engine.phase1_config.k_paths, 1);
+    EXPECT_DOUBLE_EQ(runs.front().scenario.engine.owlt_margin, 0.0);
     EXPECT_EQ(runs.front().scenario.output_directory,
               (repo_root() / "results" / "exp2_unicast_scale" / "baseline" / "matrix_0001").lexically_normal());
 
     EXPECT_EQ(runs.back().manifest.run_id, "matrix_0081");
     EXPECT_EQ(runs.back().scenario.traffic_patterns[0].bundle_count, 500u);
-    EXPECT_DOUBLE_EQ(runs.back().scenario.traffic_patterns[0].payload_size, 4096.0);
-    EXPECT_EQ(runs.back().scenario.engine.phase1_config.k_paths, 16);
-    EXPECT_DOUBLE_EQ(runs.back().scenario.engine.owlt_margin, 1.0);
+    EXPECT_DOUBLE_EQ(runs.back().scenario.traffic_patterns[0].payload_size, 2048.0);
+    EXPECT_EQ(runs.back().scenario.engine.phase1_config.k_paths, 3);
+    EXPECT_DOUBLE_EQ(runs.back().scenario.engine.owlt_margin, 2.0);
 }
 
 TEST(ExperimentRunnerTest, Exp3SyntheticGroupSizeAdjustsScenarioDocumentBeforeParsing) {

@@ -124,9 +124,10 @@ TEST(ExperimentConfigTest, Exp2BaselineScenarioIsExecutable) {
     EXPECT_EQ(scenario.traffic_patterns[0].source_node, 1);
     EXPECT_EQ(scenario.traffic_patterns[0].destination_node, 8);
     EXPECT_EQ(scenario.traffic_patterns[0].bundle_count, 20u);
-    EXPECT_DOUBLE_EQ(scenario.traffic_patterns[0].period, 1.0);
+    EXPECT_DOUBLE_EQ(scenario.traffic_patterns[0].period, 0.09);
 
-    EXPECT_EQ(scenario.engine.phase1_config.k_paths, 8);
+    EXPECT_EQ(scenario.engine.phase1_config.k_paths, 3);
+    EXPECT_FALSE(scenario.engine.phase1_config.one_route_per_neighbor);
     EXPECT_DOUBLE_EQ(scenario.engine.owlt_margin, 0.6);
     EXPECT_EQ(scenario.engine.recompute_budget, 6);
     EXPECT_EQ(scenario.engine.failure_seed, 202u);
@@ -153,18 +154,21 @@ TEST(ExperimentConfigTest, Exp2MatrixDimensionsMatchScaleExperiment) {
     ASSERT_NE(payload_size, nullptr);
     ASSERT_EQ(payload_size->values.size(), 3u);
     EXPECT_EQ(std::get<std::int64_t>(payload_size->values[1]), 1024);
+    EXPECT_EQ(std::get<std::int64_t>(payload_size->values[2]), 2048);
 
     const ExperimentDimension* k_paths = find_dimension(matrix, "simulation.phase1.k_paths");
     ASSERT_NE(k_paths, nullptr);
     ASSERT_EQ(k_paths->values.size(), 3u);
-    EXPECT_EQ(std::get<std::int64_t>(k_paths->values[2]), 16);
+    EXPECT_EQ(std::get<std::int64_t>(k_paths->values[0]), 1);
+    EXPECT_EQ(std::get<std::int64_t>(k_paths->values[2]), 3);
 
     const ExperimentDimension* owlt_margin = find_dimension(matrix, "simulation.owlt_margin");
     ASSERT_NE(owlt_margin, nullptr);
     ASSERT_EQ(owlt_margin->values.size(), 3u);
     EXPECT_TRUE(std::holds_alternative<double>(owlt_margin->values[0]));
-    EXPECT_DOUBLE_EQ(std::get<double>(owlt_margin->values[0]), 0.3);
-    EXPECT_DOUBLE_EQ(std::get<double>(owlt_margin->values[2]), 1.0);
+    EXPECT_DOUBLE_EQ(std::get<double>(owlt_margin->values[0]), 0.0);
+    EXPECT_DOUBLE_EQ(std::get<double>(owlt_margin->values[1]), 1.0);
+    EXPECT_DOUBLE_EQ(std::get<double>(owlt_margin->values[2]), 2.0);
 }
 
 TEST(ExperimentConfigTest, Exp3TreePlanScenarioIsExecutable) {

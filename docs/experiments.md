@@ -15,6 +15,8 @@ This workspace contains six experiment families under [configs/experiments](../c
 | Exp5 | [configs/experiments/exp5_redundancy](../configs/experiments/exp5_redundancy) | Redundancy modes and failure background comparison | `.\build\sabr.exe run-scenario --config .\configs\experiments\exp5_redundancy\single_backup.json --output .\results\exp5_smoke` |
 | Exp6 | [configs/experiments/exp6_ablation](../configs/experiments/exp6_ablation) | Enhancement and redundancy ablation study | `.\build\sabr.exe run-scenario --config .\configs\experiments\exp6_ablation\baseline.json --output .\results\exp6_smoke` |
 
+Exp2 design note: the baseline now uses `period = 0.09`, `end_time = 180.0`, and `one_route_per_neighbor = false` so the `bundle_count` sweep reaches the configured load levels before source contacts close and the `k_paths` sweep directly reflects Phase1 candidate-route count. The current Exp2 matrix values are `bundle_count = 20/100/500`, `payload_size = 256/1024/2048`, `k_paths = 1/2/3`, and `owlt_margin = 0.0/1.0/2.0`. The widened `owlt_margin` range is intentional: it keeps delivery rates high after the contact-plan boost while restoring a more visible sensitivity sweep than the earlier 0.3/0.6/1.0 setup.
+
 ## Batch Workflow
 
 Run the built-in smoke sweep:

@@ -2,6 +2,8 @@
 
 本手册面向当前工作区中的 SABR 仿真系统实验执行、结果导出、图表生成、性能验证与最终交付流程，目标是让使用者在不修改代码的前提下，仅通过配置文件、命令行和脚本完成实验一到实验六，以及阶段 9 的正式验收流程。
 
+如果你当前重点是“怎么写配置文件”，请优先阅读配套文档 [docs/configuration_zh.md](docs/configuration_zh.md)，其中单独说明了 `simulation`、`traffic`、`failures`、`redundancy`、`multicast_groups` 和 `matrix.json` 的字段与默认值。
+
 当前仓库已经具备以下基线能力：
 
 - 单场景执行：`run-scenario`
@@ -294,6 +296,20 @@ d:\code_workbench_D\SABR\.venv\Scripts\python.exe .\scripts\run_exp1_complete.py
 - `traffic[0].payload_size`
 - `simulation.phase1.k_paths`
 - `simulation.owlt_margin`
+
+当前 Exp2 配置额外做了两项约束修正，用来避免矩阵“名义上在扫，实际上扫不出来”：
+
+- baseline 将 `traffic[0].period` 收紧为 `0.09`，并把 `simulation.end_time` 延长到 `180.0`，这样 `bundle_count = 500` 也能在源节点最后一个首跳窗口关闭前完成注入，并在仿真结束前完成过期统计。
+- baseline 关闭了 `one_route_per_neighbor`，因此 `simulation.phase1.k_paths` 的扫描现在直接观察 Phase1 候选路径数，而不会被“按首跳邻居补齐”逻辑抵消。
+
+当前推荐将这四个维度解释为：
+
+- `traffic[0].bundle_count`：`20 / 100 / 500`
+- `traffic[0].payload_size`：`256 / 1024 / 2048`
+- `simulation.phase1.k_paths`：`1 / 2 / 3`
+- `simulation.owlt_margin`：`0.0 / 1.0 / 2.0`
+
+当前这组 `owlt_margin` 取值不是默认值照搬，而是为了在“整体 delivery_rate 保持较高”的前提下，重新拉开低、中、高裕量之间的可观察差异。相比更早的 `0.3 / 0.6 / 1.0`，新版范围更适合作为参数敏感性对照。
 
 **推荐命令**
 
