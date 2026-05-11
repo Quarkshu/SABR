@@ -214,6 +214,8 @@ TEST(ExperimentConfigTest, Exp4BaselineScenarioIncludesPlanReplacement) {
     EXPECT_EQ(scenario.scenario_name, "exp4_multicast_repair_baseline");
     ASSERT_EQ(scenario.multicast_groups.size(), 1u);
     EXPECT_EQ(scenario.multicast_groups[0].group_id, "ops_broadcast");
+    ASSERT_EQ(scenario.traffic_patterns.size(), 1u);
+    EXPECT_EQ(scenario.traffic_patterns[0].mode, TrafficGenerationMode::BATCH);
     ASSERT_EQ(scenario.engine.failure_rules.size(), 1u);
     EXPECT_EQ(scenario.engine.failure_rules[0].mode, FailureRuleMode::PLAN_REPLACEMENT);
     EXPECT_NE(scenario.engine.failure_rules[0].replacement_plan, nullptr);

@@ -279,10 +279,10 @@ def build_execution_plan(workspace_root: Path,
         steps = [
             scenario_step(executable, "baseline", experiment_dir / "baseline.json", baseline_root / "baseline"),
             matrix_step(executable, "matrix", experiment_dir / "matrix.json", matrix_root),
-            export_step(executable, "export_baseline", baseline_root, exports_root / "baseline", "summary::delivery_rate", "scenario_name"),
-            export_step(executable, "export_matrix", matrix_root, exports_root / "matrix", "summary::delivery_rate", "coord::failure_injection[0].trigger_time", "coord::traffic[0].bundle_count"),
+            export_step(executable, "export_baseline", baseline_root, exports_root / "baseline", "derived::receiver_completion", "scenario_name"),
+            export_step(executable, "export_matrix", matrix_root, exports_root / "matrix", "derived::receiver_completion", "coord::failure_injection[0].trigger_time", "coord::traffic[0].bundle_count"),
             plot_step(executable, "baseline_timeline", "timeline", baseline_root / "baseline", plots_root / "exp4_baseline_timeline.svg", title="Exp4 Baseline Timeline"),
-            plot_step(executable, "matrix_comparison", "comparison", exports_root / "matrix" / "aggregated_summary.csv", plots_root / "exp4_matrix_comparison.svg", metric="summary::delivery_rate", x_key="coord::failure_injection[0].trigger_time", series_key="coord::traffic[0].bundle_count", title="Exp4 Matrix Delivery Comparison"),
+            plot_step(executable, "matrix_comparison", "comparison", exports_root / "matrix" / "aggregated_summary.csv", plots_root / "exp4_matrix_comparison.svg", metric="derived::receiver_completion", x_key="coord::failure_injection[0].trigger_time", series_key="coord::traffic[0].bundle_count", title="Exp4 Matrix Receiver Completion Comparison"),
         ]
     elif experiment_name == "exp5_redundancy":
         scenarios_root = output_root / "scenarios"

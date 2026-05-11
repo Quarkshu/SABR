@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -17,6 +18,7 @@ import run_exp3_complete  # noqa: E402
 import run_exp4_complete  # noqa: E402
 import run_exp5_complete  # noqa: E402
 import run_exp6_complete  # noqa: E402
+import sabr_results  # noqa: E402
 
 
 class CompleteExperimentWorkflowTest(unittest.TestCase):
@@ -96,6 +98,83 @@ class CompleteExperimentWorkflowTest(unittest.TestCase):
         self.assertNotIn("coord::traffic[0].bundle_count", export_matrix_step["command"])
         self.assertIn("coord::traffic[*].bundle_count", matrix_plot_step["command"])
         self.assertNotIn("coord::traffic[0].bundle_count", matrix_plot_step["command"])
+
+    def test_exp4_plan_uses_receiver_completion_metric(self) -> None:
+        plan = workflow.build_execution_plan(
+            REPO_ROOT,
+            REPO_ROOT / "build" / "sabr.exe",
+            "exp4_multicast_repair",
+            REPO_ROOT / "results" / "exp4_complete_test_plan",
+        )
+
+        export_matrix_step = next(step for step in plan["steps"] if step["name"] == "export_matrix")
+        matrix_plot_step = next(step for step in plan["steps"] if step["name"] == "matrix_comparison")
+
+        self.assertIn("derived::receiver_completion", export_matrix_step["command"])
+        self.assertNotIn("summary::delivery_rate", export_matrix_step["command"])
+        self.assertIn("derived::receiver_completion", matrix_plot_step["command"])
+        self.assertNotIn("summary::delivery_rate", matrix_plot_step["command"])
+
+    def test_flatten_manifest_adds_multicast_receiver_completion_metric(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir_name:
+            temp_dir = Path(temp_dir_name)
+            scenario_path = temp_dir / "scenario.json"
+            stats_path = temp_dir / "stats.json"
+            manifest_path = temp_dir / "run_manifest.json"
+
+            workflow.write_json(
+                {
+                    "scenario_name": "exp4_multicast_repair_baseline",
+                    "multicast_groups": [
+                        {
+                            "group_id": "ops_broadcast",
+                            "source_node": 1,
+                            "member_nodes": [4, 5],
+                        }
+                    ],
+                    "traffic": [
+                        {
+                            "mode": "BATCH",
+                            "source_node": 1,
+                            "multicast_group_id": "ops_broadcast",
+                            "is_multicast": True,
+                            "bundle_count": 4,
+                        }
+                    ],
+                },
+                scenario_path,
+            )
+            workflow.write_json(
+                {
+                    "metadata": {"scenario_name": "exp4_multicast_repair_baseline"},
+                    "summary": {
+                        "bundles_created": 4,
+                        "bundles_delivered": 6,
+                    },
+                },
+                stats_path,
+            )
+            workflow.write_json(
+                {
+                    "run_id": "matrix_0001",
+                    "experiment_name": "exp4_multicast_repair",
+                    "scenario_name": "exp4_multicast_repair_baseline__matrix_0001",
+                    "scenario_file": str(scenario_path),
+                    "output_directory": str(temp_dir),
+                    "success": True,
+                    "error_message": "",
+                    "matrix_coordinates": [],
+                    "generated_files": {
+                        "stats": str(stats_path),
+                    },
+                },
+                manifest_path,
+            )
+
+            row = sabr_results.flatten_manifest_and_stats(manifest_path)
+
+            self.assertEqual(row["derived::multicast_group_size"], 2)
+            self.assertAlmostEqual(row["derived::receiver_completion"], 0.75)
 
     def test_wrapper_scripts_map_to_unique_experiments(self) -> None:
         self.assertEqual(

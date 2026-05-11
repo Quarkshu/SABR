@@ -5,6 +5,67 @@ import json
 from pathlib import Path
 
 
+def resolve_multicast_group_size(scenario_path: Path,
+                                 coordinates: list[dict[str, object]]) -> int | None:
+    for coordinate in coordinates:
+        if coordinate.get("name") != "multicast.group_size":
+            continue
+        value = coordinate.get("value")
+        numeric = parse_numeric(value)
+        if numeric is None or numeric <= 0:
+            return None
+        return int(numeric)
+
+    if not scenario_path.exists() or scenario_path.suffix.lower() != ".json":
+        return None
+
+    document = load_json(scenario_path)
+    groups = document.get("multicast_groups", [])
+    if not isinstance(groups, list) or not groups:
+        return None
+
+    group_sizes: dict[str, int] = {}
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        group_id = str(group.get("group_id", ""))
+        members = group.get("member_nodes", [])
+        if group_id and isinstance(members, list):
+            group_sizes[group_id] = len(members)
+
+    traffic_patterns = document.get("traffic", [])
+    if isinstance(traffic_patterns, list):
+        for pattern in traffic_patterns:
+            if not isinstance(pattern, dict):
+                continue
+            if not pattern.get("is_multicast") and not pattern.get("multicast_group_id"):
+                continue
+            group_id = str(pattern.get("multicast_group_id", ""))
+            if group_id and group_id in group_sizes:
+                return group_sizes[group_id]
+
+    first_group = groups[0]
+    if isinstance(first_group, dict) and isinstance(first_group.get("member_nodes", []), list):
+        return len(first_group.get("member_nodes", []))
+    return None
+
+
+def add_derived_metrics(row: dict[str, object],
+                        scenario_path: Path,
+                        coordinates: list[dict[str, object]]) -> None:
+    group_size = resolve_multicast_group_size(scenario_path, coordinates)
+    if group_size is None or group_size <= 0:
+        return
+
+    bundles_created = parse_numeric(row.get("summary::bundles_created"))
+    bundles_delivered = parse_numeric(row.get("summary::bundles_delivered"))
+    if bundles_created is None or bundles_delivered is None or bundles_created <= 0.0:
+        return
+
+    row["derived::multicast_group_size"] = group_size
+    row["derived::receiver_completion"] = bundles_delivered / (bundles_created * group_size)
+
+
 def load_json(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
@@ -39,6 +100,8 @@ def write_csv(rows: list[dict[str, object]], output_path: Path) -> None:
 def flatten_manifest_and_stats(manifest_path: Path) -> dict[str, object]:
     manifest = load_json(manifest_path)
     stats_path = Path(manifest.get("generated_files", {}).get("stats", ""))
+    scenario_path = Path(manifest.get("scenario_file", ""))
+    coordinates = list(manifest.get("matrix_coordinates", []))
     row: dict[str, object] = {
         "run_id": manifest.get("run_id", ""),
         "experiment_name": manifest.get("experiment_name", ""),
@@ -49,7 +112,7 @@ def flatten_manifest_and_stats(manifest_path: Path) -> dict[str, object]:
         "error_message": manifest.get("error_message", ""),
     }
 
-    for coordinate in manifest.get("matrix_coordinates", []):
+    for coordinate in coordinates:
         row[f"coord::{coordinate['name']}"] = coordinate.get("value")
 
     if stats_path.exists():
@@ -60,6 +123,7 @@ def flatten_manifest_and_stats(manifest_path: Path) -> dict[str, object]:
             row[f"metadata::{key}"] = value
         for key, value in summary.items():
             row[f"summary::{key}"] = value
+        add_derived_metrics(row, scenario_path, coordinates)
 
     return row
 

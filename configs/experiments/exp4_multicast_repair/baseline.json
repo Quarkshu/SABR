@@ -26,7 +26,7 @@
   ],
   "traffic": [
     {
-      "mode": "SINGLE",
+      "mode": "BATCH",
       "source_node": 1,
       "multicast_group_id": "ops_broadcast",
       "is_multicast": true,
