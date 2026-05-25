@@ -4,7 +4,7 @@
   "contact_plan_file": "contact_plan.ion",
   "simulation": {
     "start_time": 0.0,
-    "end_time": 80.0,
+    "end_time": 120.0,
     "owlt_margin": 0.5,
     "recompute_budget": 4,
     "failure_seed": 505,

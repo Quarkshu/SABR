@@ -118,7 +118,7 @@ json* ensure_member(json* cursor,
     auto member = cursor->find(token.key);
     if (member == cursor->end()) {
         if (allow_missing_last && is_last) {
-            member = cursor->insert(cursor->end(), {token.key, json{}});
+            member = cursor->emplace(token.key, json{}).first;
         } else {
             throw std::runtime_error("missing key '" + token.key + "' while applying path: " + full_path);
         }

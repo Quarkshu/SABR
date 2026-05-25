@@ -22,6 +22,10 @@ std::filesystem::path exp3_dir() {
     return repo_root() / "configs" / "experiments" / "exp3_multicast_plan";
 }
 
+std::filesystem::path exp5_dir() {
+    return repo_root() / "configs" / "experiments" / "exp5_redundancy";
+}
+
 std::filesystem::path temp_output_root() {
     return std::filesystem::temp_directory_path() / "sabr_experiment_runner_tests";
 }
@@ -90,6 +94,25 @@ TEST(ExperimentRunnerTest, Exp3SplitControlWildcardTrafficOverridesApplyToRetain
     EXPECT_EQ(run.scenario.traffic_patterns[1].bundle_count, 1u);
     EXPECT_DOUBLE_EQ(run.scenario.traffic_patterns[0].payload_size, 128.0);
     EXPECT_DOUBLE_EQ(run.scenario.traffic_patterns[1].payload_size, 128.0);
+}
+
+TEST(ExperimentRunnerTest, Exp5MatrixCanAddMissingRedundancyMembersToScenarioDocument) {
+    const std::filesystem::path scenario_path = exp5_dir() / "primary_only.json";
+
+    const ExpandedExperimentRun run = ExperimentRunner::build_run(
+        scenario_path,
+        {
+            {"redundancy.mode", std::string("MULTI_BACKUP")},
+            {"redundancy.max_extra_copies", static_cast<std::int64_t>(2)},
+            {"redundancy.enable_for_unicast", true},
+        },
+        "exp5_redundancy",
+        1);
+
+    EXPECT_EQ(run.scenario.redundancy.mode, RedundancyMode::MULTI_BACKUP);
+    EXPECT_EQ(run.scenario.redundancy.max_extra_copies, 2u);
+    EXPECT_TRUE(run.scenario.redundancy.enable_for_unicast);
+    EXPECT_EQ(run.scenario.scenario_name, "exp5_redundancy_primary_only__matrix_0001");
 }
 
 TEST(ExperimentRunnerTest, RunScenarioWritesArtifactsAndManifest) {

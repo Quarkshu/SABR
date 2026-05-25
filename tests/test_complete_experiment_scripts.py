@@ -80,8 +80,18 @@ class CompleteExperimentWorkflowTest(unittest.TestCase):
             "matrix",
         ])
         export_matrix_step = next(step for step in plan["steps"] if step["name"] == "export_matrix")
+        export_matrix_primary_only_step = next(step for step in plan["steps"] if step["name"] == "export_matrix_primary_only")
+        export_matrix_single_backup_step = next(step for step in plan["steps"] if step["name"] == "export_matrix_single_backup")
+        matrix_primary_only_plot_step = next(step for step in plan["steps"] if step["name"] == "matrix_primary_only_comparison")
+        matrix_single_backup_plot_step = next(step for step in plan["steps"] if step["name"] == "matrix_single_backup_comparison")
         self.assertIn("coord::failures[0].probability", export_matrix_step["command"])
         self.assertIn("coord::redundancy.mode", export_matrix_step["command"])
+        self.assertIn("exp5_redundancy_primary_only", export_matrix_primary_only_step["input_path"])
+        self.assertIn("exp5_redundancy_single_backup", export_matrix_single_backup_step["input_path"])
+        self.assertIn("matrix_primary_only", export_matrix_primary_only_step["output_path"])
+        self.assertIn("matrix_single_backup", export_matrix_single_backup_step["output_path"])
+        self.assertIn("exp5_matrix_primary_only_comparison.svg", matrix_primary_only_plot_step["output_path"])
+        self.assertIn("exp5_matrix_single_backup_comparison.svg", matrix_single_backup_plot_step["output_path"])
 
     def test_exp3_plan_uses_wildcard_matrix_coordinates(self) -> None:
         plan = workflow.build_execution_plan(

@@ -259,6 +259,7 @@ TEST(ExperimentConfigTest, Exp5BaselineScenarioIncludesRuntimeRedundancy) {
     const ScenarioConfig scenario = ConfigParser::parse_scenario_file(baseline_path);
 
     EXPECT_EQ(scenario.scenario_name, "exp5_redundancy_single_backup");
+    EXPECT_DOUBLE_EQ(scenario.engine.end_time, 120.0);
     EXPECT_EQ(scenario.engine.redundancy.mode, RedundancyMode::SINGLE_BACKUP);
     EXPECT_EQ(scenario.engine.redundancy.max_extra_copies, 1u);
     EXPECT_DOUBLE_EQ(scenario.engine.redundancy.risk_threshold, 0.55);
@@ -270,10 +271,12 @@ TEST(ExperimentConfigTest, Exp5AdditionalBaselineScenariosCoverExpandedModes) {
     const ScenarioConfig multi_backup = ConfigParser::parse_scenario_file(exp5_dir() / "multi_backup.json");
     const ScenarioConfig trunk_only = ConfigParser::parse_scenario_file(exp5_dir() / "trunk_only.json");
 
+    EXPECT_DOUBLE_EQ(multi_backup.engine.end_time, 120.0);
     EXPECT_EQ(multi_backup.engine.redundancy.mode, RedundancyMode::MULTI_BACKUP);
     EXPECT_EQ(multi_backup.engine.redundancy.max_extra_copies, 2u);
     EXPECT_TRUE(multi_backup.engine.redundancy.enable_for_unicast);
 
+    EXPECT_DOUBLE_EQ(trunk_only.engine.end_time, 120.0);
     EXPECT_EQ(trunk_only.engine.redundancy.mode, RedundancyMode::TRUNK_ONLY);
     EXPECT_FALSE(trunk_only.engine.redundancy.enable_for_unicast);
     EXPECT_TRUE(trunk_only.engine.redundancy.enable_for_multicast_trunk);

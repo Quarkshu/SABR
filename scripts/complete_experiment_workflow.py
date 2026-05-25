@@ -289,6 +289,7 @@ def build_execution_plan(workspace_root: Path,
         matrix_root = output_root / "matrix"
         exports_root = output_root / "exports"
         plots_root = output_root / "plots"
+        matrix_group_root = matrix_root / "exp5_redundancy"
         steps = [
             scenario_step(executable, "primary_only", experiment_dir / "primary_only.json", scenarios_root / "primary_only"),
             scenario_step(executable, "single_backup", experiment_dir / "single_backup.json", scenarios_root / "single_backup"),
@@ -297,8 +298,12 @@ def build_execution_plan(workspace_root: Path,
             matrix_step(executable, "matrix", experiment_dir / "matrix.json", matrix_root),
             export_step(executable, "export_scenarios", scenarios_root, exports_root / "scenarios", "summary::delivery_rate", "scenario_name"),
             export_step(executable, "export_matrix", matrix_root, exports_root / "matrix", "summary::delivery_rate", "coord::failures[0].probability", "coord::redundancy.mode"),
+            export_step(executable, "export_matrix_primary_only", matrix_group_root / "exp5_redundancy_primary_only", exports_root / "matrix_primary_only", "summary::delivery_rate", "coord::failures[0].probability", "coord::redundancy.mode"),
+            export_step(executable, "export_matrix_single_backup", matrix_group_root / "exp5_redundancy_single_backup", exports_root / "matrix_single_backup", "summary::delivery_rate", "coord::failures[0].probability", "coord::redundancy.mode"),
             plot_step(executable, "scenarios_comparison", "comparison", exports_root / "scenarios" / "aggregated_summary.csv", plots_root / "exp5_scenarios_comparison.svg", metric="summary::delivery_rate", x_key="scenario_name", title="Exp5 Scenario Delivery Comparison"),
             plot_step(executable, "matrix_comparison", "comparison", exports_root / "matrix" / "aggregated_summary.csv", plots_root / "exp5_matrix_comparison.svg", metric="summary::delivery_rate", x_key="coord::failures[0].probability", series_key="coord::redundancy.mode", title="Exp5 Matrix Delivery Comparison"),
+            plot_step(executable, "matrix_primary_only_comparison", "comparison", exports_root / "matrix_primary_only" / "aggregated_summary.csv", plots_root / "exp5_matrix_primary_only_comparison.svg", metric="summary::delivery_rate", x_key="coord::failures[0].probability", series_key="coord::redundancy.mode", title="Exp5 Primary-Only Matrix Delivery Comparison"),
+            plot_step(executable, "matrix_single_backup_comparison", "comparison", exports_root / "matrix_single_backup" / "aggregated_summary.csv", plots_root / "exp5_matrix_single_backup_comparison.svg", metric="summary::delivery_rate", x_key="coord::failures[0].probability", series_key="coord::redundancy.mode", title="Exp5 Single-Backup Matrix Delivery Comparison"),
         ]
     else:
         baseline_root = output_root / "baseline"

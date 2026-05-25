@@ -2,7 +2,9 @@
 
 本手册面向当前工作区中的 SABR 仿真系统实验执行、结果导出、图表生成、性能验证与最终交付流程，目标是让使用者在不修改代码的前提下，仅通过配置文件、命令行和脚本完成实验一到实验六，以及阶段 9 的正式验收流程。
 
-如果你当前重点是“怎么写配置文件”，请优先阅读配套文档 [docs/configuration_zh.md](docs/configuration_zh.md)，其中单独说明了 `simulation`、`traffic`、`failures`、`redundancy`、`multicast_groups` 和 `matrix.json` 的字段与默认值。
+如果你当前重点是“怎么写配置文件”，请优先阅读配套文档 [configuration_zh.md](configuration_zh.md)，其中单独说明了 `simulation`、`traffic`、`failures`、`redundancy`、`multicast_groups` 和 `matrix.json` 的字段与默认值。
+
+如果你当前重点是“怎么把实验结果整理成正式报告”，请直接使用 [experiment_report_template_zh.md](experiment_report_template_zh.md)。该模板已经按 Exp1 到 Exp5 的统一结构抽出，可直接用于后续 Exp6 报告落地。
 
 当前仓库已经具备以下基线能力：
 
